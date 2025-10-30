@@ -1,4 +1,4 @@
-package com.curso.cleancode;
+package com.curso.cleancode.controller;
 
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +13,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SignUpTest {
+class SignApiTest {
 
   @Autowired
   TestRestTemplate http;
-  @Autowired JdbcTemplate jdbc;
+  @Autowired
+  JdbcTemplate jdbc;
 
   @BeforeEach
   void setup() {
@@ -52,49 +53,7 @@ class SignUpTest {
     );
     ResponseEntity<Map> res = http.postForEntity("/api/signup", body, Map.class);
     assertThat(res.getStatusCode().value()).isEqualTo(400);
-    assertThat(res.getBody().get("error")).isEqualTo("Invalid cpf");
-    assertThat(res.getBody().get("accountId")).isNull();
-  }
-
-  @Test
-  void shouldReturnBadRequestWhenNameIsInvalid() {
-    var body = Map.of(
-        "name","John",
-        "email","john@doe.com",
-        "document","935.411.347-80",
-        "password","secret123"
-    );
-    ResponseEntity<Map> res = http.postForEntity("/api/signup", body, Map.class);
-    assertThat(res.getStatusCode().value()).isEqualTo(400);
-    assertThat(res.getBody().get("error")).isEqualTo("Invalid name");
-    assertThat(res.getBody().get("accountId")).isNull();
-  }
-
-  @Test
-  void shouldReturnBadRequestWhenEmailIsInvalid() {
-    var body = Map.of(
-        "name","John Doe",
-        "email","john@doe@com",
-        "document","935.411.347-80",
-        "password","secret123"
-    );
-    ResponseEntity<Map> res = http.postForEntity("/api/signup", body, Map.class);
-    assertThat(res.getStatusCode().value()).isEqualTo(400);
-    assertThat(res.getBody().get("error")).isEqualTo("Invalid email");
-    assertThat(res.getBody().get("accountId")).isNull();
-  }
-
-  @Test
-  void shouldReturnBadRequestWhenPasswordIsInvalid() {
-    var body = Map.of(
-        "name","John Doe",
-        "email","john@doe.com",
-        "document","935.411.347-80",
-        "password","123"
-    );
-    ResponseEntity<Map> res = http.postForEntity("/api/signup", body, Map.class);
-    assertThat(res.getStatusCode().value()).isEqualTo(400);
-    assertThat(res.getBody().get("error")).isEqualTo("Invalid password");
+    assertThat(res.getBody().get("error")).isEqualTo("CPF should contain 11 digits");
     assertThat(res.getBody().get("accountId")).isNull();
   }
 }

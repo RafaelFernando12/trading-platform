@@ -1,4 +1,4 @@
-package com.curso.cleancode;
+package com.curso.cleancode.service.signup.validators;
 
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,10 +7,10 @@ public class CpfValidator {
   private static final int CPF_LENGTH = 11;
 
   public boolean validate(String cpf) {
-    if(StringUtils.isBlank(cpf)) return false;
+    if(StringUtils.isBlank(cpf)) throw new IllegalArgumentException("CPF should not be blank");
     cpf = clean(cpf);
-    if (cpf.length() != CPF_LENGTH) return false;
-    if (isSameSequence(cpf)) return false;
+    if (cpf.length() != CPF_LENGTH) throw new IllegalArgumentException("CPF should contain 11 digits");
+    if (isSameSequence(cpf)) throw new IllegalArgumentException("CPF should not be the same sequence of digits");
 
     int digit1 = calculateDigit(cpf, 10);
     int digit2 = calculateDigit(cpf, 11);
